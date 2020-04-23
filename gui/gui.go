@@ -2,7 +2,6 @@ package gui
 
 import (
 	"math/rand"
-	"time"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
@@ -12,9 +11,11 @@ import (
 	"github.com/cjeongmin/sort_visualization/insertion"
 	"github.com/cjeongmin/sort_visualization/node"
 	"github.com/cjeongmin/sort_visualization/selection"
+	"github.com/cjeongmin/sort_visualization/shell"
 )
 
 type Visualization struct {
+	fns     map[string]func(data []*node.Node, window fyne.Window)
 	sorting string
 
 	app    fyne.App
@@ -25,42 +26,37 @@ type Visualization struct {
 func NewVisualization() *Visualization {
 	app := app.New()
 	window := app.NewWindow("Sort_Visualization")
-	window.SetFixedSize(false)
-	return &Visualization{"", app, window, []*node.Node{}}
+	fns := map[string]func(data []*node.Node, window fyne.Window){
+		"Bubble":    bubble.Sort,
+		"Selection": selection.Sort,
+		"Insertion": insertion.Sort,
+		"Shell":     shell.Sort,
+	}
+	return &Visualization{fns, "", app, window, []*node.Node{}}
 }
 
-func (v *Visualization) Shuffle() {
-	rand.Seed(time.Now().UnixNano())
-	length := int(rand.Int31n(20-15) + 15)
-	v.data = make([]*node.Node, length)
+func (v *Visualization) shuffle() {
+	v.data = make([]*node.Node, 20)
 	for i := range v.data {
-		v.data[i] = node.NewNode(i+1, length)
+		v.data[i] = node.NewNode(i+1, 20)
 	}
-	rand.Shuffle(length, func(i, j int) {
+	rand.Shuffle(20, func(i, j int) {
 		v.data[i], v.data[j] = v.data[j], v.data[i]
 	})
 }
 
-func (v *Visualization) Display() {
+func (v *Visualization) display() {
 	container := fyne.NewContainerWithLayout(layout.NewGridLayoutWithRows(2))
 	container.AddObject(widget.NewButton("Start", func() {
-		v.Shuffle()
-		switch v.sorting {
-		case "Bubble":
-			bubble.Sort(v.data, v.window)
-			v.sorting = ""
-			v.Display()
-		case "Selection":
-			selection.Sort(v.data, v.window)
-			v.sorting = ""
-			v.Display()
-		case "Insertion":
-			insertion.Sort(v.data, v.window)
-			v.sorting = ""
-			v.Display()
+		if v.sorting == "" {
+			return
 		}
+		v.shuffle()
+		v.fns[v.sorting](v.data, v.window)
+		v.sorting = ""
+		v.display()
 	}))
-	container.AddObject(widget.NewSelect([]string{"Bubble", "Selection", "Insertion"}, func(s string) {
+	container.AddObject(widget.NewSelect([]string{"Bubble", "Selection", "Insertion", "Shell"}, func(s string) {
 		v.sorting = s
 	}))
 	v.window.Resize(fyne.NewSize(480, 360))
@@ -69,6 +65,6 @@ func (v *Visualization) Display() {
 
 func (v *Visualization) ShowAndRun() {
 	v.window.SetFixedSize(true)
-	v.Display()
+	v.display()
 	v.window.ShowAndRun()
 }

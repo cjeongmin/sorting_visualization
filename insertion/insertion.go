@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	RED    = color.RGBA{R: 255, G: 0, B: 0}
 	GREEN  = color.RGBA{R: 0, G: 255, B: 0}
 	YELLOW = color.RGBA{R: 255, G: 255, B: 0}
 )
@@ -45,5 +44,5 @@ func Sort(data []*node.Node, window fyne.Window) {
 		}
 		window.SetContent(newContainer(data))
 	}
-	time.Sleep(time.Second)
+	time.Sleep(time.Millisecond * 100)
 }

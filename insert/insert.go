@@ -1,4 +1,4 @@
-package selection
+package insert
 
 import (
 	"image/color"
@@ -25,33 +25,25 @@ func newContainer(data []*node.Node) *fyne.Container {
 
 func Sort(data []*node.Node, window fyne.Window) {
 	window.SetContent(newContainer(data))
-	for i := 0; i < len(data)-1; i++ {
-		minIdx := i
-		data[i].Fill(GREEN)
-		for j := i + 1; j < len(data); j++ {
-			data[j].Fill(RED)
-			if data[minIdx].Data > data[j].Data {
-				if minIdx != i {
-					data[minIdx].Fill(color.White)
-				}
-				minIdx = j
-				data[minIdx].Fill(YELLOW)
-			}
+	for i := 1; i < len(data); i++ {
+		key, j := data[i], i-1
+		key.Fill(GREEN)
+		window.SetContent(newContainer(data))
+		time.Sleep(time.Millisecond * 100)
+		for j >= 0 && data[j].Data > key.Data {
+			data[j].Fill(YELLOW)
 			window.SetContent(newContainer(data))
 			time.Sleep(time.Millisecond * 250)
-			if j != minIdx {
-				data[j].Fill(color.White)
-			}
+			data[j+1] = data[j]
+			j--
 		}
-		data[i], data[minIdx] = data[minIdx], data[i]
+		data[j+1] = key
 		window.SetContent(newContainer(data))
-		time.Sleep(time.Millisecond * 250)
-		data[i].Fill(color.White)
-		data[minIdx].Fill(color.White)
+		time.Sleep(time.Millisecond * 100)
+		for _, v := range data {
+			v.Fill(color.White)
+		}
+		window.SetContent(newContainer(data))
 	}
-	for _, node := range data {
-		node.Fill(color.White)
-	}
-	window.SetContent(newContainer(data))
-	time.Sleep(time.Millisecond * 250)
+	time.Sleep(time.Second)
 }

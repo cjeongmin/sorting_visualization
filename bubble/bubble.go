@@ -39,7 +39,4 @@ func Sort(data []*node.Node, window fyne.Window) {
 			data[j+1].Fill(color.White)
 		}
 	}
-	data[0].Fill(color.White)
-	data[1].Fill(color.White)
-	window.SetContent(newContainer(data))
 }

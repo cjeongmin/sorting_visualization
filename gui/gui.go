@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 	"github.com/cjeongmin/sort_visualization/bubble"
+	"github.com/cjeongmin/sort_visualization/insert"
 	"github.com/cjeongmin/sort_visualization/node"
 	"github.com/cjeongmin/sort_visualization/selection"
 )
@@ -54,7 +55,7 @@ func (v *Visualization) Display() {
 			v.sorting = ""
 			v.Display()
 		case "Insert":
-
+			insert.Sort(v.data, v.window)
 			v.sorting = ""
 			v.Display()
 		}
@@ -67,6 +68,7 @@ func (v *Visualization) Display() {
 }
 
 func (v *Visualization) ShowAndRun() {
+	v.window.SetFixedSize(true)
 	v.Display()
 	v.window.ShowAndRun()
 }

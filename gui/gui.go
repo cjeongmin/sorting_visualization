@@ -9,7 +9,7 @@ import (
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 	"github.com/cjeongmin/sort_visualization/bubble"
-	"github.com/cjeongmin/sort_visualization/insert"
+	"github.com/cjeongmin/sort_visualization/insertion"
 	"github.com/cjeongmin/sort_visualization/node"
 	"github.com/cjeongmin/sort_visualization/selection"
 )
@@ -50,17 +50,17 @@ func (v *Visualization) Display() {
 			bubble.Sort(v.data, v.window)
 			v.sorting = ""
 			v.Display()
-		case "Select":
+		case "Selection":
 			selection.Sort(v.data, v.window)
 			v.sorting = ""
 			v.Display()
-		case "Insert":
-			insert.Sort(v.data, v.window)
+		case "Insertion":
+			insertion.Sort(v.data, v.window)
 			v.sorting = ""
 			v.Display()
 		}
 	}))
-	container.AddObject(widget.NewSelect([]string{"Bubble", "Select", "Insert"}, func(s string) {
+	container.AddObject(widget.NewSelect([]string{"Bubble", "Selection", "Insertion"}, func(s string) {
 		v.sorting = s
 	}))
 	v.window.Resize(fyne.NewSize(480, 360))

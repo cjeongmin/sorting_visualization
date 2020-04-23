@@ -1,4 +1,4 @@
-package insert
+package insertion
 
 import (
 	"image/color"

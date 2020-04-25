@@ -1,10 +1,8 @@
 package main
 
-import (
-	"github.com/cjeongmin/sort_visualization/gui"
-)
+import "github.com/cjeongmin/sort_visualization/visualizer"
 
 func main() {
-	visual := gui.NewVisualization()
-	visual.ShowAndRun()
+	app := visualizer.NewVisualizer()
+	app.ShowAndRun()
 }
